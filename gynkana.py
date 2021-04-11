@@ -47,7 +47,7 @@ def reto1(id0):
     serverMsg2 = udpServerSock.recvfrom(1024)
     msg = serverMsg2[0].decode()
     # print(msg)
-    
+
     msg= msg.split(':')[1]
     idmsg = msg.split('\n')[0]
 
@@ -60,14 +60,54 @@ def reto1(id0):
 
 def reto2(id1):
 
+    # Parte 1, creación del cliente TCP 
     tcpSock = socket(AF_INET, SOCK_STREAM)
     tcpSock.connect(('rick', 3002))
+
+    # Parte 2, crear una cadena de caracteres con todos los datos recibidos hasta recibir "that's all"
+    msg = ""
+    cont = 0
+    while 1:
+        datos = tcpSock.recv(1024).decode()
+        # print(datos)
+        index = datos.find("that's all")
+        if index == -1:
+            msg = msg + datos
+        else:
+            datos = datos[:index]
+            msg = msg + datos
+            break
+    
+    print(msg)
+    # Parte 3, contar las palabras que tiene la cadena
+    cont = 0
+    for c in msg:
+        if c == ' ' or c == '\n':
+            cont = cont + 1
+
+    print("Total palabras: "+ str(cont))
+    # Parte 4 envio de codigo de Reto 1 más el número de palabras encontrado antes de la Flag
+    msgEnvio = id1+ " " +str(cont)
+    tcpSock.sendall(msgEnvio.encode())
+
+    # Parte 5, recibir respuesta sobre como comenzar el Reto 3
+    while 1:
+        datos = ""
+        datos = tcpSock.recv(128).decode()
+        if datos == "":
+            break
+        print(datos)
+        
+
+
+    
 
 
 
 ## MAIN ##
 username = "mystifying_bhabha"
 id0 = reto0()
-print("ID Reto 0: "+id0)
+# print("ID Reto 0: "+id0)
 id1 = reto1(id0)
-print("ID Reto 1: "+id1)
+# print("ID Reto 1: "+id1)
+reto2(id1)
