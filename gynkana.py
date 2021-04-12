@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from socket import *
+import sys
 
 ## Funciones externas ##
 def esPalindromo(palabra): #Comprueba si la palabra que se le pasa por parámetro es un palindromo
@@ -18,6 +19,17 @@ def buscaPalindromo(mensaje):
                 return palabra
     return -1
 
+def inviertePalabras(cadena):
+    cadenaInversa = ""
+    cadenaPartida = cadena.split()
+    for palabra in cadenaPartida:
+        if palabra.isdigit():
+            cadenaInversa = cadenaInversa + " " + palabra
+        else:
+            cadenaInversa = cadenaInversa + " " + palabra[::-1]
+    return cadenaInversa
+
+       
 
 
 ## RETO 0 ##
@@ -125,7 +137,7 @@ def reto3(id2):
     tcpsock = socket(AF_INET, SOCK_STREAM)
     tcpsock.connect(('rick', 6500))
     
-    #Parte 2, recorre el mensaje palabra por palabra y comprueba donde está el palindromo
+    # Parte 2, recorre el mensaje palabra por palabra y comprueba donde está el palindromo
     cadena = ""
     cont = 0
 
@@ -144,28 +156,31 @@ def reto3(id2):
         else:
             ulti = msg.split(result)
             cadena = cadena + ulti[0]
-            print("---------------"+result+"____________")
             break
-
-    print(cadena)
-
-    return "Hola"          
-
     
+    # Parte 3, invierte la cadena de caracteres obtenida 
+    cadenaInv = inviertePalabras(cadena)
 
-    
-    # cadena = ""
-    # palabra = ""
-    # for each c in msg
+    #Parte 4, crea el formato de cadena que nos pide para enviar, lo envia y reciba info del siguiente reto 
+    enviar = id2 + " " + cadenaInv + " " + "--" 
+    tcpsock.send(enviar.encode())
+    msg = tcpsock.recv(1024).decode()
+    msg= msg.split(':')[1]
+    idmsg = msg.split('\n')[0]
+    tcpsock.close()
+    return idmsg          
 
 
 
 ## MAIN ##
 username = "mystifying_bhabha"
 id0 = reto0()
-# print("ID Reto 0: "+id0)
+print("ID Reto 0: "+id0)
 id1 = reto1(id0)
-# print("ID Reto 1: "+id1)
+print("ID Reto 1: "+id1)
 id2 = reto2(id1)
-# print("ID Reto 2: "+id2)
-reto3(id2)
+print("ID Reto 2: "+id2)
+id3 = reto3(id2)
+print("ID Reto 3: "+id3)
+
+sys.exit("Fin del programa")
