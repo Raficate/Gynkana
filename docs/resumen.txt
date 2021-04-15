@@ -1,0 +1,103 @@
+ACCESO
+	1. Conectar VPN
+	2. Usar las credenciales de a continuación para conectar con el comando siguiente de ssh
+
+	user ssh: mystifying_bhabha
+	pass ssh: thah8odooD
+
+	Comando ssh para conectar a The Hub:
+	
+		$ ssh mystifying_bhabha@arco.esi.uclm.es -p 3333
+
+	En Windows no podemos hacerlo con certificados por lo que hay que hacerlo de la manera anterior.
+
+	3.Para pasar la Gynkana a TheHub y poder probarla con los cambios realizados hay que acceder al servidor mediante WinSCP (ya está todo configurado).
+
+RETOS
+	Reto 0: Conectar al servidor TCP ubicado en rick:2000 para recibir más información.
+
+	Test Chamber 1: UDP
+-------------------
+
+- Create a UDP server on your machine (on the port you want)
+- Send a message to the UDP server at 'rick:4000'
+  indicating:
+  - the port binded to your UDP server.
+  - a blank space
+  - the identifier in the first line on this text
+  Example: "7777 NjFZJxzRTvlsESULcWOb" (without quotes).
+
+WARNING: Keep in mind that other players may choose the same port.
+You must choose a free port.
+
+I will send the query "upper-code?" to your server. It should reply
+the uppercase version of 'NjFZJxzRTvlsESULcWOb'.
+
+If all is fine, I will send to your server the instructions to continue.
+You have 5 seconds to send the message. 
+
+
+---------------------------
+Welcome to the test chamber number 2. You're doing quite well.
+Excellent work. As part of a required test protocol, I will not monitor
+the next test chamber. You will be entirely on your own. Good luck.
+
+Test Chamber 2: Word counter
+----------------------------
+
+- You must connect to the TCP server at rick:3002 and read words
+  until you get the flag "that's all". Then you must reply with a
+  message that includes:
+  - the identifer in the first line on this text
+  - a blank space
+  - the amount of words you read BEFORE the flag.
+
+Example:
+  - if receive: "twenty tiny tigers that's all take a taxi ..."
+  - then send:  "3c567093-7f14-4211-8ccd-2905 3" (without quotes).
+
+Then you can receive the instructions to continue.
+You have 5 seconds to connect.
+
+Test chamber number 3 is extremely simple.
+
+Test Chamber 3: Reverse words
+-----------------------------
+
+- Your client must connect to the TCP server at rick:6500 and read
+  words and numbers until you get a palindrome.
+- Then, send the string "8ea98cab-9f7" and send back all what it
+  received reversing words, but not numbers.
+- Finally, send string " --".
+
+Example:
+  - if receive: "the 20 twenty tiny tigers take 12 taxis anna to town ..."
+  - the send:   "8ea98cab-9f7 eht 20 ytnewt ynit sregit ekat 12 sixat --"
+
+Then you can receive the instructions to continue.
+You have 5 seconds to connect.
+
+identifier:8335a0d3-af35-44a3-b7a8-80
+
+Please, note that the increase in the difficulty of test chambers is
+merely a device to enhance your testing experience. Anyway, I regret
+to inform you that this next test is impossible. Quit now.
+
+Test Chamber 4: MD5
+-------------------
+
+- Connect to the server rick:9000 and send the identifier
+  string: '8335a0d3-af35-44a3-b7a8-80' (without quotes)
+- You will receive the contents of a binary file, preceded by its size in bytes (in ASCII
+  coding) and a colon character (':').
+- Calculate the MD5 sum of that file.
+- Send result (binary format) to the server.
+
+If it's right, the server will give you instructions to continue.
+You have 20 seconds to complete the challenge.
+
+Hints:
+- Example: The MD5 digest for the file located in the-hub:/data
+  is 'd5d9f7918683cd271edc3b9e6e17bc50' (hex format)
+
+>

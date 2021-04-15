@@ -2,6 +2,7 @@
 
 from socket import *
 import sys
+import hashlib
 
 ## Funciones externas ##
 def esPalindromo(palabra): #Comprueba si la palabra que se le pasa por parámetro es un palindromo
@@ -29,8 +30,6 @@ def inviertePalabras(cadena):
             cadenaInversa = cadenaInversa + " " + palabra[::-1]
     return cadenaInversa
 
-       
-
 
 ## RETO 0 ##
 def reto0():
@@ -44,6 +43,7 @@ def reto0():
     
     msg = sock.recv(1024).decode()
     # print(msg)
+
     msg= msg.split(':')[1]
     idmsg = msg.split('\n')[0]
 
@@ -72,8 +72,8 @@ def reto1(id0):
     # print("id0 to upper: "+id0upper)
     msg2 = str(udpServerPort)+" "+id0upper
     udpClientSock.sendto(id0upper.encode(), ('rick', client[1]))
-    serverMsg2 = udpServerSock.recvfrom(1024)
-    msg = serverMsg2[0].decode()
+    serverMsg2, client2 = udpServerSock.recvfrom(1024)
+    msg = serverMsg2.decode()
     # print(msg)
 
     msg= msg.split(':')[1]
@@ -126,7 +126,7 @@ def reto2(id1):
             break
         comprobacion = datos
         
-    comprobacion= comprobacion.split(':')[1]
+    comprobacion= comprobacion.split(':', 1)[1]
     idmsg = comprobacion.split('\n')[0]
     tcpSock.close()
     return idmsg
@@ -144,9 +144,6 @@ def reto3(id2):
     while 1:
 
         msg = tcpsock.recv(1024).decode()
-        # print("------------")
-        # print(msg)
-        # cadena = cadena + msg
         if msg == "":
             break
         
@@ -161,14 +158,58 @@ def reto3(id2):
     # Parte 3, invierte la cadena de caracteres obtenida 
     cadenaInv = inviertePalabras(cadena)
 
-    #Parte 4, crea el formato de cadena que nos pide para enviar, lo envia y reciba info del siguiente reto 
+    # Parte 4, crea el formato de cadena que nos pide para enviar, lo envia y reciba info del siguiente reto 
     enviar = id2 + " " + cadenaInv + " " + "--" 
     tcpsock.send(enviar.encode())
     msg = tcpsock.recv(1024).decode()
-    msg= msg.split(':')[1]
+    # print(msg)
+    msg= msg.split(':', 1)[1]
     idmsg = msg.split('\n')[0]
     tcpsock.close()
-    return idmsg          
+    return idmsg    
+
+## RETO 4 ##
+def reto4(id3):
+    tcpsock = socket(AF_INET, SOCK_STREAM)
+    tcpsock.connect(('rick', 9000))
+    tcpsock.send(id3.encode())
+    
+    seguir = True
+    primerMensaje = True
+    msgCompleto = ""
+    while seguir:
+        data = tcpsock.recv(1024)
+
+        if primerMensaje:
+            msg = data.split(b':', 1)
+            tamano = int(msg[0].decode())
+            # print("Tamaño del archivo: "+str(tamano))
+            # print("----------------")
+            msgCompleto = msg[1]
+            primerMensaje = False
+        else:
+            msgCompleto = msgCompleto + data
+            # print("Tamaño de archivo calculado de momento: "+ str(len(msgCompleto)))
+            if int(len(msgCompleto)) == tamano:
+                # print("Fin de la cosa ")
+                seguir = False
+                # break
+
+                
+    # print("Tamaño archivo: "+ str(tamano))
+    
+    # print("Tamaño de archico calculado: "+str(tamMensaje))
+
+    sumaMD5 = hashlib.md5(msgCompleto).digest()
+    print("Suma MD5: "+str(sumaMD5))
+
+    tcpsock.send(sumaMD5)
+
+    resp = tcpsock.recv(1024).decode()
+    print(resp)
+    return 1
+
+
 
 
 
@@ -182,5 +223,5 @@ id2 = reto2(id1)
 print("ID Reto 2: "+id2)
 id3 = reto3(id2)
 print("ID Reto 3: "+id3)
-
+reto4(id3)
 sys.exit("Fin del programa")
