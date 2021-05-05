@@ -3,6 +3,9 @@
 from socket import *
 import sys
 import hashlib
+import base64
+import struct
+import array
 
 ## Funciones externas ##
 def esPalindromo(palabra): #Comprueba si la palabra que se le pasa por parámetro es un palindromo
@@ -29,6 +32,20 @@ def inviertePalabras(cadena):
         else:
             cadenaInversa = cadenaInversa + " " + palabra[::-1]
     return cadenaInversa
+
+def cksum(pkt): #https://bitbucket.org/DavidVilla/inet-checksum/src/master/inet_checksum.py
+    # type: (bytes) -> int
+    if len(pkt) % 2 == 1:
+        pkt += b'\0'
+    s = sum(array.array('H', pkt))
+    s = (s >> 16) + (s & 0xffff)
+    s += s >> 16
+    s = ~s
+
+    if sys.byteorder == 'little':
+        s = ((s >> 8) & 0xff) | s << 8
+
+    return s & 0xffff
 
 
 ## RETO 0 ##
@@ -201,13 +218,54 @@ def reto4(id3):
     # print("Tamaño de archico calculado: "+str(tamMensaje))
 
     sumaMD5 = hashlib.md5(msgCompleto).digest()
-    print("Suma MD5: "+str(sumaMD5))
+    # print("Suma MD5: "+str(sumaMD5))
 
     tcpsock.send(sumaMD5)
 
-    resp = tcpsock.recv(1024).decode()
-    print(resp)
-    return 1
+    resp = tcpsock.recv(2048).decode()
+    idmsg = resp.split(':', 1)[1]
+    idmsg = idmsg.split('\n')[0]
+
+    tcpsock.close()
+    # print(resp)
+    return idmsg
+
+
+## Reto 5 ##
+def reto5(id4):
+    
+    udpsock = socket(AF_INET, SOCK_DGRAM)
+
+    headerFormat = '!3sBHHH'
+    payload = base64.b64encode(id4.encode())
+    packet = struct.pack(headerFormat, b'WYP', 0, 0, 0, 0) + payload
+    # print(packet)
+    checksum = cksum(packet)
+
+    # print("Checksum 0: "+ str(checksum))
+    header = struct.pack(headerFormat, b'WYP', 0, 0, checksum, 0)
+    packet = header + payload
+    # print(packet)
+    checksum = cksum(packet)
+    # print("Checksum 1: "+ str(checksum))
+    # print("Cabecera enviada: "+ str(header))
+
+    udpsock.sendto(packet, ('rick', 6000))
+
+    data, server = udpsock.recvfrom(2048)
+    # print(data)
+    # print(server)
+
+
+    lenData = str(len(data)-8)
+    # print(len(lenData))
+    formatResponse = '!3sBHH'+lenData+'s'
+    
+    msg = struct.unpack(formatResponse, data)
+    msg = base64.b64decode(msg[4])
+    print(msg)
+
+
 
 
 
@@ -223,5 +281,7 @@ id2 = reto2(id1)
 print("ID Reto 2: "+id2)
 id3 = reto3(id2)
 print("ID Reto 3: "+id3)
-reto4(id3)
+id4 = reto4(id3)
+print("ID Reto 4: "+id4)
+reto5(id4)
 sys.exit("Fin del programa")

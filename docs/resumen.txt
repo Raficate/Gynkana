@@ -9,6 +9,8 @@ ACCESO
 	
 		$ ssh mystifying_bhabha@arco.esi.uclm.es -p 3333
 
+    ssh mystifying_bhabha@uclm-redes.riberadeltajo.es -p 8001
+
 	En Windows no podemos hacerlo con certificados por lo que hay que hacerlo de la manera anterior.
 
 	3.Para pasar la Gynkana a TheHub y poder probarla con los cambios realizados hay que acceder al servidor mediante WinSCP (ya está todo configurado).
@@ -99,5 +101,44 @@ You have 20 seconds to complete the challenge.
 Hints:
 - Example: The MD5 digest for the file located in the-hub:/data
   is 'd5d9f7918683cd271edc3b9e6e17bc50' (hex format)
+
+Fantastic! You remained resolute and resourceful in an atmosphere of
+extreme pessimism. As a reward... I can let you solve another challenge.
+
+Test Chamber 5: WYP
+-------------------
+
+WYP (Wonderful Yinkana Protocol) is a binary application protocol designed to
+test player packing skills. WYP is encapsulated over UDP datagrams.
+- Message format:
+  +---------+----------------------------+
+  | header  |  payload                   |
+  +---------+----------------------------+
+- Header format:
+  +-------+------+------+----------+----------+
+  | "WYP" | type | code | checksum | sequence |
+  +-------+------+------+----------+----------+
+     3       1      2        2           2      (bytes)
+
+  where:
+  - type: 0:request, 1:reply
+  - code: 0:no-error, 1:wrong-code, 2:wrong-format,
+          3:wrong-challenge, 4:wrong-checksum,
+          5:bad-sequence-number
+    - 'code' must be 0 on requests
+  - checksum: Internet checksum (RFC1071) for the whole message
+  - sequence: 16 bit integer sequence number
+  - payload:
+    - Text encoded with base64 format
+
+Instructions:
+- Send a WYP request to rick:6000 with c11dba6a-675d0 as payload.
+- The reply will contain the instructions for next challenge.
+- You have 5 seconds to send query.
+
+Hints:
+- Use module 'struct' to build messages
+- You can use the checksum calculation function in
+  https://bitbucket.org/DavidVilla/inet-checksum/src/master/inet_checksum.py
 
 >
