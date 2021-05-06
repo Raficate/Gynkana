@@ -242,31 +242,18 @@ def reto5(id4):
     packet = header + payload
 
     checksum = cksum(packet)
-
-    # print("Checksum 0: "+ str(checksum))
     header = struct.pack(headerFormat, b'WYP', 0, 0, checksum, 1)
     packet = header + payload
-    # print(packet)
-    # checksum2 = cksum(packet2)
-    # print("Checksum 1: "+ str(checksum))
-    # print("Cabecera enviada: "+ str(header))
+
 
     udpsock.sendto(packet, ('rick', 6000))
-
     data, server = udpsock.recvfrom(2048)
-    print(data)
-
 
     lenData = str(len(data)-8)
-    # print(len(lenData))
     formatResponse = '!3sBHH'+lenData+'s'
     
     msg = struct.unpack(formatResponse, data)
-    
-    # print(msg[0])
-    # print(msg[1])
-    # print(msg[2])
-    # print(msg[3])
+
     msg4 = base64.b64decode(msg[4])
     print(msg4.decode())
 
