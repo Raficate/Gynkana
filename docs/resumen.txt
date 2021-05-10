@@ -142,3 +142,27 @@ Hints:
   https://bitbucket.org/DavidVilla/inet-checksum/src/master/inet_checksum.py
 
 >
+
+The experiment is nearing its conclusion. When rou are done, stop
+writing and throw your kayboard away. This testing initiative
+resulations require both hands to be free before serving any cake.
+
+Test Chamber 6: Web Server Post
+-------------------------------
+
+You must create a web server in a free port. Then send a message like
+'47fb07ab-3b830 <port>' to the TCP socket 'rick:8002'.
+You will receive error messages throgh this connection.
+- <port> is the port number where you web server listen.
+
+- Your server will receive a lot of requests, which must be performed
+  concurrently to improved performance. If required time is too long, the
+  challenge will fail.
+- The requested files will be RFCs from http://rick:81/rfc/rfc<number>.txt
+- If succeed, your server will receive the instructions of the next challenge
+  as a POST request.
+- FORBBIDEN modules: http, http.client, http.server
+
+- You have 18 seconds to complete.
+
+>

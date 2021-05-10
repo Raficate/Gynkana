@@ -255,9 +255,18 @@ def reto5(id4):
     msg = struct.unpack(formatResponse, data)
 
     msg4 = base64.b64decode(msg[4])
-    print(msg4.decode())
+
+    msg4 = msg4.decode()
+    idmsg = msg4.split(':', 1)[1]
+    idmsg = idmsg.split('\n')[0]
+
+    udpsock.close()
+
+    return idmsg
 
 
+## Reto 6 ##
+# def reto6(id5):
 
 
 
@@ -275,5 +284,6 @@ id3 = reto3(id2)
 print("ID Reto 3: "+id3)
 id4 = reto4(id3)
 print("ID Reto 4: "+id4)
-reto5(id4)
+id5 = reto5(id4)
+print("ID Reto 5: "+id5)
 sys.exit("Fin del programa")
