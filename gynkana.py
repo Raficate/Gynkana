@@ -6,6 +6,12 @@ import hashlib
 import base64
 import struct
 import array
+import _thread
+import threading
+import urllib.request
+import json
+import time
+
 
 ## Funciones externas ##
 def esPalindromo(palabra): #Comprueba si la palabra que se le pasa por parámetro es un palindromo
@@ -46,6 +52,25 @@ def cksum(pkt): #https://bitbucket.org/DavidVilla/inet-checksum/src/master/inet_
         s = ((s >> 8) & 0xff) | s << 8
 
     return s & 0xffff
+
+def handle(sock, client, n): #https://docs.python.org/2/library/urllib.html
+    print(f"Client connected: {n} {client}")
+    # while 1:
+    data = sock.recv(1024)
+    # if not data:
+    #     break
+    
+    endpoint = data.split()[1]
+    endpoint = endpoint.decode()
+    # print(endpoint)
+    download = urllib.request.urlopen(url+endpoint)
+    # print(download)
+    response = download.read().decode()
+    # print(response)
+        
+    # sock.close
+
+
 
 
 ## RETO 0 ##
@@ -266,14 +291,40 @@ def reto5(id4):
 
 
 ## Reto 6 ##
-# def reto6(id5):
+def reto6(id5):
 
+    port = 8614
 
+    sock = socket(AF_INET, SOCK_STREAM)
+    sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+    sock.bind(('', port))
+    sock.listen()
+    
+    client = socket(AF_INET, SOCK_STREAM)
+    msg = id5+" "+str(port)
+    client.connect(('rick', 8002))
+    client.send(msg.encode())
+    
+
+    errmsg = client.recv(1024) #Recibe el mensaje de error
+    # print(errmsg)
+
+    #Comenzamos a recibir data en el servidor
+
+    n = 0 
+    while 1:
+        (childsocket, address) = sock.accept()
+
+        n += 1
+        x = threading.Thread(target=handle, args=(childsocket, address, n))
+        x.start()
+        #https://realpython.com/intro-to-python-threading/
 
 
 
 ## MAIN ##
 username = "mystifying_bhabha"
+url = "http://rick:81/rfc"
 id0 = reto0()
 print("ID Reto 0: "+id0)
 id1 = reto1(id0)
@@ -286,4 +337,5 @@ id4 = reto4(id3)
 print("ID Reto 4: "+id4)
 id5 = reto5(id4)
 print("ID Reto 5: "+id5)
+reto6(id5)
 sys.exit("Fin del programa")
