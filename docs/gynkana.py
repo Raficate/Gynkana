@@ -55,7 +55,6 @@ def cksum(pkt): #https://bitbucket.org/DavidVilla/inet-checksum/src/master/inet_
 
 def handle(sock, client, n): #https://docs.python.org/2/library/urllib.html
     print(f"Client connected: {n} {client}")
-
     # while 1:
     data = sock.recv(1024)
     # if not data:
@@ -311,10 +310,14 @@ def reto6(id5):
     n = 0 
     
     while 1:
-        (childsocket, address) = sock.accept()
-        n += 1
-        x = threading.Thread(target=handle, args=(childsocket, address, n))
-        x.start()
+
+
+        data = sock.recv(1024)
+        print(data.decode())
+        # (childsocket, address) = sock.accept()
+        # n += 1
+        # x = threading.Thread(target=handle, args=(childsocket, address, n))
+        # x.start()
         #https://realpython.com/intro-to-python-threading/
 
 
