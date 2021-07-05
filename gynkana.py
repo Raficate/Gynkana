@@ -70,7 +70,7 @@ def handle(sock, client, n): #https://docs.python.org/2/library/urllib.html
     # print(response)
     print(f"Client disconnected: {n} {client}")
 
-    sock.close
+    sock.close 
 
 ## RETO 0 ##
 def reto0():

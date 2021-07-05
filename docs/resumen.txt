@@ -48,14 +48,14 @@ Test Chamber 2: Word counter
 ----------------------------
 
 - You must connect to the TCP server at rick:3002 and read words
-  until you get the flag "that's all". Then you must reply with a
+  until you get the flag "that's it". Then you must reply with a
   message that includes:
   - the identifer in the first line on this text
   - a blank space
   - the amount of words you read BEFORE the flag.
 
 Example:
-  - if receive: "twenty tiny tigers that's all take a taxi ..."
+  - if receive: "twenty tiny tigers that's it take a taxi ..."
   - then send:  "3c567093-7f14-4211-8ccd-2905 3" (without quotes).
 
 Then you can receive the instructions to continue.
