@@ -72,7 +72,7 @@ def handle(sock, client, n): #https://docs.python.org/2/library/urllib.html
         response = request.urlopen(get)
         data = response.read()
         # print(data.decode())
-        sock.sendall('HTTP/1.1 200 OK\n\n'.encode() + data)
+        # sock.sendall('HTTP/1.1 200 OK\n\n'.encode() + data)
 
         # print(f"Client request {n} downloaded and reedirected")
     
